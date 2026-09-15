@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --color-bg: var(--bg);
+  --color-panel: var(--bg-panel);
+  --color-surface: var(--surface);
+  --color-ink: var(--text);
+  --color-soft: var(--text-soft);
+  --color-accent: var(--accent);
+  --color-accentc: var(--accent-contrast);
+  --color-accent-tint: var(--accent-tint);
+  --color-secondary: var(--secondary);
+  --color-hairline: var(--border);
+  --color-darkbg: var(--dark-bg);
+  --color-darkbg2: var(--dark-bg-2);
+  --color-paper: var(--paper);
+  --color-cream: var(--chip);
+}
+
+:root {
+  /* Fixed brand constants — same in both themes, used for surfaces that are
+     always dark (footer, reservation card) regardless of viewer theme. */
+  --wine: #5c1d24;
+  --wine-deep: #401318;
+  --paper: #faf8f5;
+  --ink-fixed: #1a1515;
+  --ink-fixed-2: #120e0d;
+
+  --bg: var(--paper);
+  --bg-panel: #f5f1ea;
+  --surface: #ffffff;
+  --text: var(--ink-fixed);
+  --text-soft: #6e6665;
+  --accent: var(--wine);
+  --accent-contrast: #ffffff;
+  --accent-tint: rgba(92, 29, 36, 0.06);
+  --secondary: #1d435c;
+  --border: #ebe5df;
+  --chip: #f0eae1;
+  --dark-bg: var(--ink-fixed);
+  --dark-bg-2: var(--ink-fixed-2);
+}
+
+/* This site mirrors one specific Figma design, which only defines a light
+   palette — so, unlike the previous version, the theme does not switch with
+   the visitor's OS/browser dark-mode setting. Colors stay pinned to the
+   Figma values in every context. */
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-wrap: balance;
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
