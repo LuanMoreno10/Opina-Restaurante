@@ -1,7 +1,20 @@
 import arrozPeixe from "../assets/images/Arroz_peixe.jpg";
 import peixeBrasa from "../assets/images/peixe_brasa.jpg";
+import cataplana from "../assets/images/cataplana.jpg";
+import polvo from "../assets/images/polvo.jpg";
+import lulas from "../assets/images/lulas.jpg";
+import tigre from "../assets/images/tigre.jpg";
+import sapateira from "../assets/images/sapateira.jpg";
+import ameijoas from "../assets/images/ameijoas.jpg";
+import gambas from "../assets/images/gambas.jpg";
+import pataniscas from "../assets/images/pataniscas.jpg";
+import petinga from "../assets/images/petinga.jpg";
 import sala01 from "../assets/images/sala01.jpg";
 import sala02 from "../assets/images/sala02.jpg";
+import sala03 from "../assets/images/sala03.jpg";
+import sala04 from "../assets/images/sala04.jpg";
+import esplanda from "../assets/images/esplanada.jpg";
+import esplanada02 from "../assets/images/esplanada02.jpg";
 
 export interface RestaurantInfo {
   name: string;
@@ -35,7 +48,7 @@ export const restaurant: RestaurantInfo = {
     mapsUrl:
       "https://www.google.com/maps/search/?api=1&query=R.+S%C3%A3o+Pedro%2C+91%2C+4450-718+Matosinhos",
   },
-  rating: { score: "8,6/10", label: "Fabuloso · 1900+ avaliações no TheFork" },
+  rating: { score: "8,7/10", label: "Fabuloso · 1900+ avaliações no TheFork" },
 };
 
 export type DishIconName = "rice" | "cataplana" | "fish";
@@ -84,12 +97,10 @@ export const hours: HourRow[] = [
 ];
 
 export const amenities: string[] = [
-  "Terraço",
+  "Esplanada",
   "Ideal para grupos",
-  "Estacionamento",
   "Wi-Fi",
   "Aberto até tarde",
-  "Cartão Visa",
 ];
 
 export interface Review {
@@ -116,8 +127,19 @@ export interface GalleryItem {
 export const galleryItems: GalleryItem[] = [
   { id: "arroz-peixe", title: "Arroz de Peixe", category: "Pratos", image: arrozPeixe },
   { id: "brasa", title: "Peixe na Brasa", category: "Pratos", image: peixeBrasa },
-  { id: "cataplana", title: "Cataplana Algarvia", category: "Pratos" },
+  { id: "cataplana", title: "Cataplana Algarvia", category: "Pratos", image: cataplana },
+  { id: "tigre", title: "Camarão Tigre", category: "Pratos", image: tigre },
+  { id: "sapateira", title: "Sapateira Recheada", category: "Pratos", image: sapateira },
+  { id: "polvo", title: "Polvo à Lagareiro", category: "Pratos", image: polvo },
+  { id: "lulas", title: "Lulas Grelhadas", category: "Pratos", image: lulas },
+  { id: "ameijoas", title: "Ameijoas à Portuguesa", category: "Pratos", image: ameijoas },
+  { id: "gambas", title: "Gambas à Guilho", category: "Pratos", image: gambas },
+  { id: "petinga", title: "Petinga Frita", category: "Pratos", image: petinga },
+  { id: "pataniscas", title: "Pataniscas", category: "Pratos", image: pataniscas},
   { id: "sala", title: "A Sala do Ópina", category: "Sala", image: sala01 },
   { id: "mesa", title: "Mesa Posta", category: "Sala", image: sala02 },
-  { id: "matosinhos", title: "Junto à Lota de Leixões", category: "Matosinhos" },
+  { id: "sala-ambiente", title: "Ambiente da Sala", category: "Sala", image: sala03 },
+  { id: "sala04", title: "Sala 04", category: "Sala", image: sala04 },
+  { id: "esplanada", title: "A Esplanada do Ópina", category: "Sala", image: esplanda },
+  { id: "esplanada02", title: "Esplanada 02", category: "Sala", image: esplanada02 },
 ];

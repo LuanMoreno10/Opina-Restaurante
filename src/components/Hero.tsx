@@ -46,7 +46,8 @@ export default function Hero() {
         <Photo
           src={entrada}
           alt="Fachada do restaurante Ópina, em Matosinhos"
-          className="aspect-[4/5] w-full max-w-[420px] flex-shrink-0 lg:w-[420px]"
+          priority
+          className="aspect-[4/3] w-full max-w-[420px] flex-shrink-0 sm:aspect-[4/5] lg:w-[420px]"
         />
       </div>
     </section>
