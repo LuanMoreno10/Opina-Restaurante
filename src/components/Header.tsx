@@ -1,122 +1,264 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { restaurant } from "../data/restaurant";
+import { restaurant, hours } from "../data/restaurant";
+import logo from "../assets/images/opina-logo.svg";
 
-const links = [
-  { to: "/", label: "Início", end: true },
-  { to: "/menu", label: "Menu" },
+interface NavItem {
+  to: string;
+  label: string;
+  end?: boolean;
+}
+
+const links: NavItem[] = [
+  { to: "/menu", label: "Carta" },
   { to: "/galeria", label: "Galeria" },
   { to: "/contactos", label: "Contactos" },
 ];
 
+const mobileLinks: NavItem[] = [{ to: "/", label: "Início", end: true }, ...links];
+
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `text-sm font-medium transition-colors hover:text-accent ${
+  `font-display text-[17px] no-underline transition-colors hover:text-accent ${
     isActive ? "text-accent" : "text-ink"
   }`;
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const headerRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const { pathname } = useLocation();
 
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
+  useEffect(() => setMenuOpen(false), [pathname]);
+
+  // The panel sits under the header, so it needs the header's real height.
+  useLayoutEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const update = () => setHeaderHeight(el.offsetHeight);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    firstLinkRef.current?.focus({ preventScroll: true });
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
     };
   }, [menuOpen]);
 
+  // Close the panel if the viewport grows into the desktop layout.
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const onChange = () => mq.matches && setMenuOpen(false);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-hairline bg-bg/95 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-        <Link to="/" className="flex flex-col gap-0.5 leading-none">
-          <span className="font-display text-2xl font-black text-accent">
-            {restaurant.name}
+    <header ref={headerRef} className="sticky top-0 z-40 border-b border-hairline bg-bg/90 backdrop-blur-md">
+      <div className="mx-auto grid max-w-[1240px] grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 py-[18px]">
+        <nav className="hidden gap-7 md:flex">
+          {links.map((link) => (
+            <NavLink key={link.to} to={link.to} className={navLinkClass}>
+              {link.label}
+            </NavLink>
+          ))}
+        </nav>
+        <button
+          ref={toggleRef}
+          type="button"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-nav"
+          aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+          onClick={() => setMenuOpen((o) => !o)}
+          className="relative -ml-2.5 inline-flex h-11 w-11 items-center justify-center justify-self-start rounded-full text-ink transition-colors hover:bg-accent-tint md:hidden"
+        >
+          <span aria-hidden="true" className="relative block h-3 w-[22px]">
+            <span
+              className={`absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-transform duration-300 ease-[cubic-bezier(.2,.7,.2,1)] ${
+                menuOpen ? "top-[5px] rotate-45" : "top-0"
+              }`}
+            />
+            <span
+              className={`absolute left-0 h-[1.5px] rounded-full bg-current transition-all duration-300 ease-[cubic-bezier(.2,.7,.2,1)] ${
+                menuOpen ? "top-[5px] w-full -rotate-45" : "top-[10px] w-[14px]"
+              }`}
+            />
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-secondary">
+        </button>
+
+        <Link to="/" className="flex flex-col items-center leading-none no-underline">
+          <img src={logo} alt={restaurant.name} className="h-[34px] w-auto" />
+          <span className="mt-[3px] text-[9.5px] uppercase tracking-[0.22em] text-soft">
             Peixe &amp; Marisco
           </span>
         </Link>
 
-        <nav className="hidden gap-9 md:flex">
-          {links.map((link) => (
-            <NavLink key={link.to} to={link.to} end={link.end} className={navLinkClass}>
-              {link.label}
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-2.5">
-          <a
-            href={restaurant.phoneHref}
-            className="hidden rounded-lg border border-hairline px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-accent hover:text-accent lg:inline-flex"
-          >
+        <div className="flex items-center justify-end gap-4">
+          <a href={restaurant.phoneHref} className="hidden text-sm text-ink no-underline [font-feature-settings:'tnum'] lg:inline">
             {restaurant.phoneDisplay}
           </a>
-          <a
-            href={restaurant.theForkUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold uppercase tracking-wide text-accentc transition-transform hover:-translate-y-0.5 sm:inline-flex"
-          >
+          <a href={restaurant.theForkUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
             Reservar
           </a>
-
-          <button
-            type="button"
-            aria-expanded={menuOpen}
-            aria-controls="mobile-nav"
-            aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
-            onClick={() => setMenuOpen((open) => !open)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-hairline text-ink md:hidden"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              aria-hidden="true"
-            >
-              {menuOpen ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
-            </svg>
-          </button>
         </div>
       </div>
 
-      <div id="mobile-nav" hidden={!menuOpen} className="border-t border-hairline bg-bg md:hidden">
-        <nav className="flex flex-col gap-1 px-5 py-4">
-          {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.end}
-              className={({ isActive }) =>
-                `rounded-lg px-3 py-2.5 text-base font-medium ${
-                  isActive ? "bg-cream text-accent" : "text-ink"
-                }`
-              }
-            >
-              {link.label}
-            </NavLink>
-          ))}
-          <a href={restaurant.phoneHref} className="rounded-lg px-3 py-2.5 text-base font-medium text-ink">
-            Ligar: {restaurant.phoneDisplay}
-          </a>
-          <a
-            href={restaurant.theForkUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-1 inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold uppercase tracking-wide text-accentc"
+      {createPortal(
+        <div
+          id="mobile-nav"
+          aria-hidden={!menuOpen}
+          style={{ paddingTop: headerHeight }}
+          // Visibility flips instantly on open (so focus can land) but waits for
+          // the fade on close.
+          className={`fixed inset-0 z-30 flex flex-col bg-bg duration-300 md:hidden ${
+            menuOpen
+              ? "visible opacity-100 transition-opacity"
+              : "invisible opacity-0 transition-[opacity,visibility]"
+          }`}
+        >
+          <nav
+            aria-label="Menu principal"
+            className={`flex flex-1 flex-col overflow-y-auto px-6 pb-6 pt-4 transition-transform duration-500 ease-[cubic-bezier(.2,.7,.2,1)] ${
+              menuOpen ? "translate-y-0" : "-translate-y-3"
+            }`}
           >
-            Reservar no TheFork
-          </a>
-        </nav>
-      </div>
+            <ul className="m-0 list-none p-0">
+              {mobileLinks.map((link, i) => (
+                <li
+                  key={link.to}
+                  className={menuOpen ? "animate-rise" : ""}
+                  style={{ animationDelay: `${80 + i * 55}ms` }}
+                >
+                  <NavLink
+                    ref={i === 0 ? firstLinkRef : undefined}
+                    to={link.to}
+                    end={link.end}
+                    tabIndex={menuOpen ? 0 : -1}
+                    className={({ isActive }) =>
+                      `group flex items-baseline gap-4 border-b border-hairline py-[14px] no-underline ${
+                        isActive ? "text-accent" : "text-ink"
+                      }`
+                    }
+                  >
+                    {({ isActive }) => (
+                      <>
+                        <span className="w-6 text-[12px] text-soft [font-feature-settings:'tnum']">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="font-display text-[clamp(34px,10vw,44px)] leading-none">
+                          {link.label}
+                        </span>
+                        {isActive ? (
+                          <span aria-hidden="true" className="ml-auto h-2 w-2 self-center rounded-full bg-accent" />
+                        ) : (
+                          <span
+                            aria-hidden="true"
+                            className="ml-auto font-display text-2xl text-soft transition-transform group-hover:translate-x-1"
+                          >
+                            →
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+
+            <div
+              className={`mt-auto flex flex-col gap-6 pt-10 ${menuOpen ? "animate-rise" : ""}`}
+              style={{ animationDelay: `${80 + mobileLinks.length * 55}ms` }}
+            >
+              <a
+                href={restaurant.theForkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabIndex={menuOpen ? 0 : -1}
+                className="btn btn-primary h-12 w-full text-[17px]"
+              >
+                Reservar no TheFork
+              </a>
+
+              <div className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-hairline pt-6 text-sm">
+                <div>
+                  <span className="kicker kicker-muted mb-1 block !text-[10.5px]">Telefone</span>
+                  <a
+                    href={restaurant.phoneHref}
+                    tabIndex={menuOpen ? 0 : -1}
+                    className="text-ink no-underline [font-feature-settings:'tnum']"
+                  >
+                    {restaurant.phoneDisplay}
+                  </a>
+                </div>
+                <div>
+                  <span className="kicker kicker-muted mb-1 block !text-[10.5px]">Horário</span>
+                  {hours.map((row) => (
+                    <span key={row.days} className="mb-1 block text-ink [font-feature-settings:'tnum'] last:mb-0">
+                      <span className="block text-[12px] text-soft">{row.short}</span>
+                      {row.times.length > 0
+                        ? row.times.map((t) => <span key={t} className="block">{t}</span>)
+                        : <span className="block">Encerrado</span>}
+                    </span>
+                  ))}
+                </div>
+                <div>
+                  <span className="kicker kicker-muted mb-1 block !text-[10.5px]">Morada</span>
+                  <a
+                    href={restaurant.address.mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabIndex={menuOpen ? 0 : -1}
+                    className="text-ink no-underline"
+                  >
+                    {restaurant.address.line1}
+                    <br />
+                    {restaurant.address.line2}
+                  </a>
+                </div>
+                <div>
+                  <span className="kicker kicker-muted mb-1 block !text-[10.5px]">Siga-nos</span>
+                  <a
+                    href={restaurant.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabIndex={menuOpen ? 0 : -1}
+                    className="block text-ink no-underline"
+                  >
+                    Instagram
+                  </a>
+                  <a
+                    href={restaurant.facebookUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabIndex={menuOpen ? 0 : -1}
+                    className="block text-ink no-underline"
+                  >
+                    Facebook
+                  </a>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>,
+        document.body
+      )}
     </header>
   );
 }

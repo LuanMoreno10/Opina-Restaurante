@@ -51,49 +51,18 @@ export const restaurant: RestaurantInfo = {
   rating: { score: "8,7/10", label: "Fabuloso · 1900+ avaliações no TheFork" },
 };
 
-export type DishIconName = "rice" | "cataplana" | "fish";
-
-export interface Dish {
-  name: string;
-  description: string;
-  tag: string;
-  icon: DishIconName;
-  /** Leave undefined until real menu pricing is confirmed — never invent a price. */
-  price?: string;
-}
-
-export const dishes: Dish[] = [
-  {
-    name: "Arroz de Peixe",
-    description:
-      "A especialidade da casa: arroz caldoso, no ponto, feito com peixe fresco do dia. É o prato mais elogiado pelos nossos clientes.",
-    tag: "Prato da casa",
-    icon: "rice",
-  },
-  {
-    name: "Cataplana Algarvia",
-    description:
-      "Peixe e marisco cozinhados lentamente na cataplana de cobre, ao estilo tradicional do sul de Portugal.",
-    tag: "Para partilhar",
-    icon: "cataplana",
-  },
-  {
-    name: "Robalo na Brasa",
-    description:
-      "Robalo inteiro grelhado no fogareiro a carvão — simples, fresco e no ponto certo.",
-    tag: "Grelhado na hora",
-    icon: "fish",
-  },
-];
-
 export interface HourRow {
-  label: string;
-  time: string;
+  days: string;
+  /** Abbreviated form for tight spaces (mobile menu). */
+  short: string;
+  /** Opening periods; an empty list means closed that day. */
+  times: string[];
 }
 
 export const hours: HourRow[] = [
-  { label: "Almoço — todos os dias", time: "12:00 – 15:00" },
-  { label: "Jantar — todos os dias", time: "19:00 – 22:00" },
+  { days: "Terça a Sábado", short: "Ter–Sáb", times: ["12:00 – 15:00", "19:00 – 22:00"] },
+  { days: "Domingo", short: "Dom", times: ["12:00 – 16:00"] },
+  { days: "Segunda-feira", short: "Seg", times: [] },
 ];
 
 export const amenities: string[] = [

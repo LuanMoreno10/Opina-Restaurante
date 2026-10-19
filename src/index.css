@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-  --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: "Lora", Georgia, serif;
 
+  /* Legacy names kept so Menu / Galeria / Contactos keep working */
   --color-bg: var(--bg);
   --color-panel: var(--bg-panel);
   --color-surface: var(--surface);
@@ -18,63 +19,112 @@
   --color-darkbg2: var(--dark-bg-2);
   --color-paper: var(--paper);
   --color-cream: var(--chip);
+
+  /* Burgundy ramp (#800020) */
+  --color-wine-100: #fbf0f1;
+  --color-wine-200: #f3d9dc;
+  --color-wine-300: #e4b3b9;
+  --color-wine-400: #c9808a;
+  --color-wine-500: #a03445;
+  --color-wine-600: #800020;
+  --color-wine-700: #66001a;
+  --color-wine-800: #4a0013;
+  --color-wine-900: #2e000c;
+  --color-night: #1f0a0e;
 }
 
 :root {
-  /* Fixed brand constants — same in both themes, used for surfaces that are
-     always dark (footer, reservation card) regardless of viewer theme. */
-  --wine: #5c1d24;
-  --wine-deep: #401318;
-  --paper: #faf8f5;
-  --ink-fixed: #1a1515;
-  --ink-fixed-2: #120e0d;
+  --wine: #800020;
+  --wine-deep: #4a0013;
+  --paper: #f3f2f2;
+  --ink-fixed: #201f1d;
+  --ink-fixed-2: #1f0a0e;
 
   --bg: var(--paper);
-  --bg-panel: #f5f1ea;
-  --surface: #ffffff;
+  --bg-panel: #eae9e9;
+  --surface: #eae9e9;
   --text: var(--ink-fixed);
-  --text-soft: #6e6665;
+  --text-soft: #605d5d;
   --accent: var(--wine);
   --accent-contrast: #ffffff;
-  --accent-tint: rgba(92, 29, 36, 0.06);
-  --secondary: #1d435c;
-  --border: #ebe5df;
-  --chip: #f0eae1;
-  --dark-bg: var(--ink-fixed);
-  --dark-bg-2: var(--ink-fixed-2);
+  --accent-tint: rgba(128, 0, 32, 0.07);
+  --secondary: #605d5d;
+  --border: color-mix(in srgb, #201f1d 16%, transparent);
+  --chip: #eae7e7;
+  --dark-bg: var(--ink-fixed-2);
+  --dark-bg-2: #160609;
 }
 
-/* This site mirrors one specific Figma design, which only defines a light
-   palette — so, unlike the previous version, the theme does not switch with
-   the visitor's OS/browser dark-mode setting. Colors stay pinned to the
-   Figma values in every context. */
+/* Element defaults live in the base layer so Tailwind utilities on the same
+   elements (e.g. text-ink on a nav link) can override them. Unlayered rules
+   would beat every utility regardless of specificity. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
 
-html {
-  scroll-behavior: smooth;
-  color-scheme: light;
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  a { color: var(--color-wine-700); text-underline-offset: 3px; }
+  a:hover { color: var(--accent); }
+  :focus { outline: none; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  ::selection { background: color-mix(in srgb, var(--accent) 25%, transparent); }
 }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-sans);
+@layer components {
+  .kicker {
+    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); font-feature-settings: "tnum";
+  }
+  .kicker-muted { color: var(--text-soft); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    font-family: var(--font-display); font-weight: 600; font-size: 15px; line-height: 1.2;
+    padding: 9px 17px; border-radius: 4px; border: 1px solid transparent;
+    background: transparent; color: var(--text); text-decoration: none; cursor: pointer;
+    transition: background-color .2s ease, color .2s ease;
+  }
+  .btn-primary { color: var(--accent); border-color: var(--accent); }
+  .btn-primary:hover { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .btn-primary:active { background: color-mix(in srgb, var(--accent) 20%, transparent); }
+  .btn-secondary { border-color: var(--border); }
+  .btn-secondary:hover { color: var(--text); background: color-mix(in srgb, var(--text) 7%, transparent); }
+  .btn-ghost { color: var(--accent); padding-inline: 6px; }
+  .btn-ghost:hover { color: var(--accent); background: color-mix(in srgb, var(--accent) 9%, transparent); }
+
+  .tag-outline {
+    display: inline-flex; align-items: center; font-size: 11px; padding: 3px 10px;
+    border-radius: 3px; border: 1px solid var(--accent); color: var(--accent);
+  }
+
+  /* Photos sit matted like book plates */
+  .plate {
+    box-sizing: border-box; border: 6px solid var(--surface); outline: 1px solid var(--border);
+    filter: sepia(0.22) saturate(0.82) contrast(1.05);
+  }
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-wrap: balance;
-  font-variation-settings: "SOFT" 0, "WONK" 1;
-}
+@keyframes op-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.animate-rise { animation: op-rise .4s ease both; }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  * {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
-  }
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
