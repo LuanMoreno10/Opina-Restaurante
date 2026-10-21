@@ -22,7 +22,7 @@ export default function GalleryTile({
         type="button"
         onClick={onOpen}
         aria-label={`Ampliar: ${item.title}`}
-        className="block w-full rounded-2xl text-left transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        className="group block w-full cursor-zoom-in text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         {photo}
       </button>

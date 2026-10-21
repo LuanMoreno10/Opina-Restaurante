@@ -36,13 +36,13 @@
 :root {
   --wine: #800020;
   --wine-deep: #4a0013;
-  --paper: #f3f2f2;
+  --paper: #efe7da;
   --ink-fixed: #201f1d;
   --ink-fixed-2: #1f0a0e;
 
   --bg: var(--paper);
-  --bg-panel: #eae9e9;
-  --surface: #eae9e9;
+  --bg-panel: #e6ded1;
+  --surface: #e6ded1;
   --text: var(--ink-fixed);
   --text-soft: #605d5d;
   --accent: var(--wine);
@@ -50,7 +50,7 @@
   --accent-tint: rgba(128, 0, 32, 0.07);
   --secondary: #605d5d;
   --border: color-mix(in srgb, #201f1d 16%, transparent);
-  --chip: #eae7e7;
+  --chip: #e6dccf;
   --dark-bg: var(--ink-fixed-2);
   --dark-bg-2: #160609;
 }
@@ -123,6 +123,11 @@
 
 @keyframes op-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 .animate-rise { animation: op-rise .4s ease both; }
+
+/* Autoplay timer bar — its animationend event advances the carousel, and
+   animation-play-state lets hover/off-screen pause it for free. */
+@keyframes op-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.op-progress { transform-origin: left; animation: op-progress 5s linear forwards; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

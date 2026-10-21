@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { restaurant, hours } from "../data/restaurant";
 import logo from "../assets/images/opina-logo.svg";
 
@@ -26,12 +27,23 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [hidden, setHidden] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { scrollY } = useScroll();
   const headerRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const { pathname } = useLocation();
 
   useEffect(() => setMenuOpen(false), [pathname]);
+
+  // Get out of the way while reading down the page; come back on any scroll up.
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    setScrolled(y > 8);
+    if (Math.abs(y - previous) < 4) return;
+    setHidden(y > previous && y > 160);
+  });
 
   // The panel sits under the header, so it needs the header's real height.
   useLayoutEffect(() => {
@@ -71,7 +83,14 @@ export default function Header() {
   }, []);
 
   return (
-    <header ref={headerRef} className="sticky top-0 z-40 border-b border-hairline bg-bg/90 backdrop-blur-md">
+    <motion.header
+      ref={headerRef}
+      animate={{ y: hidden && !menuOpen ? "-100%" : "0%" }}
+      transition={{ duration: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
+      className={`sticky top-0 z-40 border-b bg-bg/90 backdrop-blur-md transition-[border-color,box-shadow] duration-300 ${
+        scrolled ? "border-hairline shadow-[0_6px_24px_-18px_rgba(32,31,29,0.35)]" : "border-transparent"
+      }`}
+    >
       <div className="mx-auto grid max-w-[1240px] grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 py-[18px]">
         <nav className="hidden gap-7 md:flex">
           {links.map((link) => (
@@ -259,6 +278,6 @@ export default function Header() {
         </div>,
         document.body
       )}
-    </header>
+    </motion.header>
   );
 }

@@ -1,8 +1,9 @@
-import { Suspense, lazy } from "react";
+import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
+import { MotionConfig } from "framer-motion";
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
-import PageLoader from "./components/PageLoader";
+import { IntroProvider } from "./components/Intro";
 
 const Home = lazy(() => import("./pages/Home"));
 const Menu = lazy(() => import("./pages/Menu"));
@@ -12,9 +13,10 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 export default function App() {
   return (
-    <>
-      <ScrollToTop />
-      <Suspense fallback={<PageLoader />}>
+    // "user": honour the OS reduce-motion setting across every animation.
+    <MotionConfig reducedMotion="user">
+      <IntroProvider>
+        <ScrollToTop />
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Home />} />
@@ -24,7 +26,7 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
-      </Suspense>
-    </>
+      </IntroProvider>
+    </MotionConfig>
   );
 }

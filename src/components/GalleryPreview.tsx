@@ -1,26 +1,73 @@
-import { restaurant } from "../data/restaurant";
-import sala02 from "../assets/images/sala02.jpg";
-import esplanada from "../assets/images/esplanada.jpg";
-import sala03 from "../assets/images/sala03.jpg";
-import peixeBrasa from "../assets/images/peixe_brasa.jpg";
-import entrada from "../assets/images/entrada.jpg";
+import { Link } from "react-router-dom";
+import { galleryItems, restaurant } from "../data/restaurant";
+import Marquee from "./Marquee";
+import { Reveal } from "./Reveal";
+
+// Alternate room and plates so the strip never shows two of a kind in a row.
+const ORDER = [
+  "sala", "arroz-peixe", "mesa", "tigre", "esplanada", "polvo",
+  "sala-ambiente", "cataplana", "esplanada02", "sapateira", "sala04", "gambas",
+];
+// Landscape photos; everything else is 4:5 portrait.
+const WIDE = new Set(["sala", "esplanada"]);
+
+const strip = ORDER.map((id) => galleryItems.find((g) => g.id === id)).filter(
+  (g): g is (typeof galleryItems)[number] & { image: string } => !!g?.image
+);
 
 export default function GalleryPreview() {
   return (
-    <section className="mx-auto max-w-[1240px] px-6 py-[clamp(64px,9vw,120px)]">
-      <div className="mb-7 flex flex-wrap items-baseline justify-between gap-4">
+    <section className="py-[clamp(64px,9vw,120px)]">
+      <Reveal className="mx-auto mb-7 flex max-w-[1240px] flex-wrap items-baseline justify-between gap-x-6 gap-y-2 px-6">
         <span className="kicker">03 — A Sala &amp; a Esplanada</span>
-        <a href={restaurant.instagramUrl} target="_blank" rel="noopener noreferrer" className="font-display text-lg italic">
-          {restaurant.instagramHandle}
-        </a>
-      </div>
-      <div className="grid grid-cols-12 gap-[18px]">
-        <img src={sala02} alt="Mesa posta" loading="lazy" className="plate col-span-12 aspect-[4/3] w-full object-cover md:col-span-7" />
-        <img src={esplanada} alt="A esplanada do Ópina" loading="lazy" className="plate col-span-12 h-full w-full object-cover md:col-span-5" />
-        <img src={sala03} alt="Ambiente da sala" loading="lazy" className="plate col-span-6 aspect-square w-full object-cover md:col-span-4" />
-        <img src={peixeBrasa} alt="Peixe na brasa" loading="lazy" className="plate col-span-6 aspect-square w-full object-cover md:col-span-4" />
-        <img src={entrada} alt="Entrada do Ópina" loading="lazy" className="plate col-span-12 aspect-square w-full object-cover md:col-span-4" />
-      </div>
+        <div className="flex items-baseline gap-5">
+          <a
+            href={restaurant.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden font-display text-lg italic sm:inline"
+          >
+            {restaurant.instagramHandle}
+          </a>
+          <Link to="/galeria" className="btn btn-ghost group !px-0">
+            Ver a galeria
+            <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </Link>
+        </div>
+      </Reveal>
+
+      <Reveal>
+        <Marquee speed={-1.2} copies={2} pauseOnHover>
+          {strip.map((item) => (
+            <Link
+              key={item.id}
+              to="/galeria"
+              tabIndex={-1}
+              className="group block shrink-0 pr-3 no-underline sm:pr-[18px]"
+            >
+              <figure className="m-0">
+                <div
+                  className={`plate overflow-hidden h-[210px] sm:h-[260px] lg:h-[320px] ${
+                    WIDE.has(item.id) ? "aspect-[3/2]" : "aspect-[4/5]"
+                  }`}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    loading="lazy"
+                    decoding="async"
+                    draggable={false}
+                    className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.06]"
+                  />
+                </div>
+                <figcaption className="mt-2 text-[12px] italic text-soft opacity-0 transition-opacity duration-300 group-hover:opacity-100 [@media(hover:none)]:opacity-100">
+                  {item.title}
+                </figcaption>
+              </figure>
+            </Link>
+          ))}
+        </Marquee>
+      </Reveal>
     </section>
   );
 }

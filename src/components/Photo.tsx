@@ -6,14 +6,14 @@ interface PhotoProps {
   priority?: boolean;
 }
 
-/** Real photo, sized the same way PhotoPlaceholder is — pass an aspect-ratio + size className. */
+/** Real photo matted like the homepage plates — pass an aspect-ratio + size className. */
 export default function Photo({ src, alt, className = "", priority = false }: PhotoProps) {
   return (
-    <div className={`overflow-hidden rounded-2xl border border-hairline ${className}`}>
+    <div className={`plate overflow-hidden ${className}`}>
       <img
         src={src}
         alt={alt}
-        className="h-full w-full object-cover"
+        className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.05]"
         loading={priority ? "eager" : "lazy"}
         decoding="async"
       />

@@ -7,14 +7,14 @@ export default function MenuGallery() {
 
   return (
     <div>
-      <div className="flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-3 sm:-mx-8 sm:scroll-px-8 sm:gap-4 sm:px-8">
+      <div className="flex snap-x snap-mandatory scroll-px-6 gap-3 overflow-x-auto px-6 pb-4 sm:-mx-6 sm:gap-4">
         {menuPhotos.map((photo, i) => (
           <button
             key={photo.src}
             type="button"
             onClick={() => setOpenIndex(i)}
             aria-label={`Ampliar: ${photo.alt}`}
-            className="group relative aspect-[640/905] w-[68vw] max-w-[280px] shrink-0 snap-start overflow-hidden rounded-xl border border-hairline bg-surface transition-transform hover:-translate-y-0.5 sm:w-[220px]"
+            className="group relative aspect-[640/905] w-[68vw] max-w-[280px] shrink-0 snap-start overflow-hidden rounded-[4px] border border-hairline bg-white shadow-[0_10px_30px_-18px_rgba(32,31,29,0.45)] transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(32,31,29,0.5)] sm:w-[220px]"
           >
             <img
               src={photo.src}
@@ -33,7 +33,7 @@ export default function MenuGallery() {
           </button>
         ))}
       </div>
-      <p className="mt-1 px-5 text-xs text-soft sm:hidden">Desliza para ver todas as páginas →</p>
+      <p className="mt-1 px-6 text-xs text-soft sm:hidden">Desliza para ver todas as páginas →</p>
 
       {openIndex !== null && (
         <Lightbox
