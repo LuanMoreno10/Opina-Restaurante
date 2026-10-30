@@ -9,7 +9,7 @@ import ameijoas from "../assets/images/ameijoas.jpg";
 import gambas from "../assets/images/gambas.jpg";
 import pataniscas from "../assets/images/pataniscas.jpg";
 import petinga from "../assets/images/petinga.jpg";
-import sala01 from "../assets/images/sala01.jpg";
+import sala from "../assets/images/sala.jpg";
 import sala02 from "../assets/images/sala02.jpg";
 import sala03 from "../assets/images/sala03.jpg";
 import sala04 from "../assets/images/sala04.jpg";
@@ -101,14 +101,14 @@ export const galleryItems: GalleryItem[] = [
   { id: "sapateira", title: "Sapateira Recheada", category: "Pratos", image: sapateira },
   { id: "polvo", title: "Polvo à Lagareiro", category: "Pratos", image: polvo },
   { id: "lulas", title: "Lulas Grelhadas", category: "Pratos", image: lulas },
-  { id: "ameijoas", title: "Ameijoas à Portuguesa", category: "Pratos", image: ameijoas },
-  { id: "gambas", title: "Gambas à Guilho", category: "Pratos", image: gambas },
+  { id: "ameijoas", title: "Ameijoas à Bolhão Pato", category: "Pratos", image: ameijoas },
+  { id: "gambas", title: "Gambas ao alho", category: "Pratos", image: gambas },
   { id: "petinga", title: "Petinga Frita", category: "Pratos", image: petinga },
   { id: "pataniscas", title: "Pataniscas", category: "Pratos", image: pataniscas},
-  { id: "sala", title: "A Sala do Ópina", category: "Sala", image: sala01 },
+  { id: "sala", title: "A Sala do Ópina", category: "Sala", image: sala },
   { id: "mesa", title: "Mesa Posta", category: "Sala", image: sala02 },
   { id: "sala-ambiente", title: "Ambiente da Sala", category: "Sala", image: sala03 },
-  { id: "sala04", title: "Sala 04", category: "Sala", image: sala04 },
+  { id: "sala04", title: "Sala", category: "Sala", image: sala04 },
   { id: "esplanada", title: "A Esplanada do Ópina", category: "Sala", image: esplanda },
-  { id: "esplanada02", title: "Esplanada 02", category: "Sala", image: esplanada02 },
+  { id: "esplanada02", title: "Esplanada", category: "Sala", image: esplanada02 },
 ];

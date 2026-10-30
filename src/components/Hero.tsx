@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import logo from "../assets/images/opina-logo.svg";
-import sala from "../assets/images/sala01.jpg";
+import sala from "../assets/images/sala.jpg";
 import { useIntroDone } from "./Intro";
 import { ease, fadeUp, lineGrow, stagger } from "../lib/motion";
 
@@ -63,7 +63,7 @@ export default function Hero() {
         <motion.img
           src={sala}
           alt="A sala do Ópina"
-          className="absolute inset-x-0 top-[-8%] h-[116%] w-full object-cover"
+          className="absolute inset-x-0 top-[-8%] h-[116%] w-full object-cover object-left"
           style={{ y: photoY }}
         />
       </motion.div>
