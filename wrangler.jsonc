@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "opina-restaurante",
+  "compatibility_date": "2025-10-01",
+  // Static site only — no server code. Cloudflare serves the Vite build output.
+  "assets": {
+    "directory": "./dist",
+    // Unknown paths (/menu, /galeria, …) get index.html so React Router can
+    // render them, instead of a 404 when a page is opened or refreshed directly.
+    "not_found_handling": "single-page-application"
+  }
+}
