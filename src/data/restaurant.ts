@@ -44,7 +44,7 @@ export const restaurant: RestaurantInfo = {
   facebookUrl: "https://www.facebook.com/opinarestaurante",
   address: {
     line1: "R. São Pedro, 91",
-    line2: "4450-718 Matosinhos",
+    line2: "4450-262 Matosinhos",
     mapsUrl:
       "https://www.google.com/maps/search/?api=1&query=R.+S%C3%A3o+Pedro%2C+91%2C+4450-718+Matosinhos",
   },
